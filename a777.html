@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Redirect</title>
+    <script>
+        function getLocationAndRedirect() {
+            // التحقق إذا كان المتصفح يدعم Geolocation API
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    
+                    // عرض الموقع الجغرافي على الشاشة
+                    document.getElementById("location").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+
+                    // إعادة التوجيه إلى رابط آخر بناءً على الموقع
+                    var redirectUrl = "https://example.com?lat=" + latitude + "&lon=" + longitude;
+                    window.location.href = redirectUrl; // إعادة توجيه إلى الرابط
+                }, function(error) {
+                    alert("Error in fetching location: " + error.message);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Click to Get Location and Redirect</h1>
+    <button onclick="getLocationAndRedirect()">Get Location and Redirect</button>
+    <p id="location"></p>
+</body>
+</html>
